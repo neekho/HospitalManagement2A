@@ -24,10 +24,15 @@ const patientDocument = new Schema({
     default: true,
   },
 
-  // dateConfined: {
-  //   type: Date,
-  //   default: new Date.now(),
-  // },
+  confined: {
+    type: Boolean,
+    default: true,
+  },
+
+  dateConfined: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const Patient = mongoose.model("Patient", patientDocument);
