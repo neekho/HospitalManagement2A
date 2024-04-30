@@ -1,6 +1,5 @@
 const Patient = require("../models/patientSchema");
 
-const mongoose = require("mongoose");
 
 module.exports.patients = (req, res) => {
   Patient.find({ active: true })
