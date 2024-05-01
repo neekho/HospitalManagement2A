@@ -22,12 +22,16 @@ const admission = (req, res) => {
 
 const createAdmission = (req, res) => {
     
-    const { admissionDate, dischargeDate, diagnosis } = req.body 
+
+    const { patient, admissionDate, dischargeDate, diagnosis, attendingDoctor} = req.body
 
     const newAdmission = Admission({
+        patient,
         admissionDate,
         dischargeDate,
-        diagnosis
+        diagnosis,
+        attendingDoctor
+        
     })
 
     try {

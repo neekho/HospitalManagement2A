@@ -2,7 +2,9 @@ const Patient = require("../models/patientSchema");
 
 
 module.exports.patients = (req, res) => {
-  Patient.find({ active: true })
+
+  
+  Patient.find({}).populate("admissions").exec()
     .then((patients) => res.send(patients))
     .catch((error) => res.send(error));
 };
@@ -16,14 +18,16 @@ module.exports.patient = (req, res) => {
 };
 
 module.exports.createPatient = (req, res) => {
-  const { firstName, lastName, age, active, confined } = req.body;
+  const { firstName, lastName, age, phoneNumber, confined, allergies, admissions } = req.body;
 
   const newPatient = new Patient({
     firstName,
     lastName,
     age,
-    active,
+    phoneNumber,
     confined,
+    allergies,
+    admissions
   });
 
   try {

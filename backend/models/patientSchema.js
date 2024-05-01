@@ -2,37 +2,53 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const patientDocument = new Schema({
+
+const referencePatient = Schema({
   firstName: {
-    type: String,
-    required: [true, "first name is needed"],
+      type: String,
+      trim: true,
+      required: [true, "first name is needed"],
   },
-
+  
   lastName: {
-    type: String,
-    required: [true, "last name is needed"],
+      type: String,
+      trim: true,
+      required: [true, "last name is needed"],
   },
-
+  
   age: {
-    type: Number,
-    required: [true, "age is required"],
+      type: Number,
+      min: 0,
+      max: 130,
+      required: [true, "age is required"],
   },
 
-  active: {
-    type: Boolean,
-    default: true,
+  phoneNumber: {
+      type: String,
+      validate: {
+          validator: function(v) {
+            return /^09\d{9}$/.test(v);
+          },
+          message: props => `${props.value} is not a valid phone number format, please use 09xxxxxxxxx`,
+          required: [true, "phone number is required"]
+      }
   },
 
   confined: {
-    type: Boolean,
-    default: true,
+      type: Boolean,
+      default: true,
   },
 
-  dateConfined: {
-    type: Date,
-    default: new Date(),
+  allergies: {
+      type: [String]
   },
-});
 
-const Patient = mongoose.model("Patient", patientDocument);
+  admissions: [{type: mongoose.Types.ObjectId, ref: "Admission"}]
+  
+
+    
+
+})
+
+const Patient = mongoose.model("Patient", referencePatient);
 module.exports = Patient;
