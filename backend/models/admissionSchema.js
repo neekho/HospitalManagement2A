@@ -4,9 +4,8 @@ const Schema = mongoose.Schema
 
 const admissionDocument = Schema({
 
-    patient: {type: mongoose.Types.ObjectId, ref: "Patients"},
-
-
+    patient: {type: mongoose.Types.ObjectId, ref: "Patient"},
+ 
     admissionDate: {
         type: Date,
         default: new Date()
