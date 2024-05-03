@@ -3,25 +3,64 @@ const router = express.Router();
 
 const patientController = require("../controllers/patientController");
 
+const admissionController = require('../controllers/admissionController')
+
+
+// api/v1/patients/query?firstName=Value&lastName=Surname
+router.get("/query", patientController.queryPatientName);
+
+
+// shows all patients
 router.get("/", patientController.patients);
 
-// api/v1/patients/id
-// api/v1/patients/661cd3a0e28300c6a3444b46
-router.get("/query", patientController.queryPatientName);
-router.get("/:id", patientController.patient);
-
-
-
-//create
-router.post("/create", patientController.createPatient);
 
 // create a nested patient record
-router.post("/nested", patientController.nested);
+router.post("/create", patientController.createPatient);
+
+// delete entire patient record
+router.delete("/delete/:/id", patientController.deletePatient)
 
 
-router.delete("/delete/:patientID", patientController.deletePatient);
 
-router.put("/update/:id", patientController.updatePatient);
+
+
+
+
+
+
+// ADMISSION
+
+// create an admission record for a given patient
+router.post("/create/admission/:patientID", admissionController.createAdmission)
+
+
+// you will need to handle the deletion and updating of admission records for x patient, the method createAdmission pushes or inserts an admission object to a 
+// a specific patient's admission list.
+// in addition, you will need to handle the deletion and updating of a doctor's info WITHIN the admission record.
+
+// you may opt for this nested document approach in contrast to referencing an object id, which i will discuss in the last branch of this repo.
+
+
+
+// router.put("/update/admission/:patientID", admissionController.updateAdmission)
+// router.delete("delete/admission/:patientiD", admissionController.deleteAdmission)
+
+
+
+// END ADMISSION
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

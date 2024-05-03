@@ -58,7 +58,13 @@ const nestedPatientSchema = Schema({
         required: [true, "last name is needed"],
         trim: true
     },
+
+    suffix: {
+        type: String,
+        enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"] 
     
+    },
+
     age: {
         type: Number,
         required: [true, "age is required"],
@@ -85,6 +91,7 @@ const nestedPatientSchema = Schema({
         type: Boolean,
         default: true,
     },
+
 
     allergies: {
         type: [String],
