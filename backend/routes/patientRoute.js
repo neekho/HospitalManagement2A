@@ -3,6 +3,9 @@ const router = express.Router();
 
 const patientController = require("../controllers/patientController");
 
+//api/v1/search?firstName=name&lastName=surname
+router.get("/search", patientController.searchPatient)
+
 router.get("/", patientController.patients);
 
 // api/v1/patients/id

@@ -1,4 +1,3 @@
-const { Int32 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -17,11 +16,6 @@ const patientDocument = new Schema({
   age: {
     type: Number,
     required: [true, "age is required"],
-  },
-
-  active: {
-    type: Boolean,
-    default: true,
   },
 
   confined: {

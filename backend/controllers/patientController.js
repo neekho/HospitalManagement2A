@@ -1,6 +1,25 @@
 const Patient = require("../models/patientSchema");
 
-const mongoose = require("mongoose");
+
+//search?firstName=name&lastName=surname
+
+module.exports.searchPatient = (req, res) => {
+
+  const queryFirstName = req.query.firstName;
+  const queryLastName = req.query.lastName;
+
+
+  console.log(queryFirstName, queryLastName)
+
+
+  Patient.find({firstName: queryFirstName, lastName: queryLastName})
+  .then((patient) => 
+      res.status(200).json({'result': patient})
+  )
+  .catch((error) => res.status(500).json({error: error.message || "Internal Server Error in querying by name"}))
+}
+
+
 
 module.exports.patients = (req, res) => {
   Patient.find({ active: true })
