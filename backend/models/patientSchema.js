@@ -6,6 +6,9 @@ const patientDocument = new Schema({
   firstName: {
     type: String,
     required: [true, "first name is needed"],
+    trim: true, // "   ONG    " -> "Ong"
+    
+    
   },
 
   lastName: {
@@ -16,11 +19,23 @@ const patientDocument = new Schema({
   age: {
     type: Number,
     required: [true, "age is required"],
+    min: 1,
+    max: 130
+
   },
 
-  active: {
-    type: Boolean,
-    default: true,
+  phoneNumber: {
+    type: String, 
+    validate: {
+      validator: function(v){
+        // 09xxxxxxxxx
+        // data: 09772102013
+        return /^09\d{9}$/.test(v);
+      },
+
+      message: props => `${props.value} is not a valid phone number format pls use 09xxxxxxxxx`,
+      required: [true, "phone number is required"]
+    }
   },
 
   confined: {
