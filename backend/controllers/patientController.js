@@ -76,25 +76,27 @@ module.exports.createPatient = (req, res) => {
 };
 
 module.exports.deletePatient = (req, res) => {
-  const patientID = req.params.patientID;
-  console.log(patientID);
+  const patientID = req.params.id;
 
-  const update = { confined: false };
-
-  Patient.findByIdAndUpdate(patientID, update, { new: true })
-    .then((patient) => res.send(patient))
-    .catch((error) => res.send(error));
+  Patient.findByIdAndDelete(patientID)
+    .then((deletedPatient) => {
+      if (!deletedPatient) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+      res.status(200).json({ message: "Patient deleted successfully", deletedPatient });
+    })
+    .catch((error) => res.status(500).json({ error: error.message || "Internal server error in deleting patient" }));
 };
 
 module.exports.updatePatient = (req, res) => {
-  const { firstName, lastName, age, confined } = req.body;
+  const { firstName, lastName, suffix, age, phoneNumber, confined, allergies } = req.body;
 
   console.log(req.body);
 
   const patientID = req.params.id;
   console.log(patientID);
 
-  const updatedFields = { firstName, lastName, age, confined };
+  const updatedFields = { firstName, lastName, suffix, age, phoneNumber, confined, allergies };
 
   console.log(updatedFields);
 

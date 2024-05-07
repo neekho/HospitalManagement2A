@@ -14,7 +14,7 @@ router.get("/:id", patientController.patient);
 
 router.post("/create", patientController.createPatient);
 
-router.delete("/delete/:patientID", patientController.deletePatient);
+router.delete("/delete/:id", patientController.deletePatient);
 
 router.put("/update/:id", patientController.updatePatient);
 

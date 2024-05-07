@@ -34,6 +34,9 @@ const createAdmission = async (req, res) => {
         
     })
 
+    // this create resource controller lacks validation checking
+
+
     try {
 
         await newAdmission.save()
@@ -50,26 +53,56 @@ const createAdmission = async (req, res) => {
 };
 
 
-const updateAdmission = (req, res) => {
-  const { admissionDate, dischargeDate, diagnosis } = req.body
 
-  const updateAdmissions = { admissionDate, dischargeDate, diagnosis}
+const updateAdmission = async (req, res) => {
 
-  const admissionId = req.params.id
-
-  Admission.findByIdAndUpdate(admissionId, updateAdmissions, {new: true})
-  .then((updatedAdmission) => res.status(200).json(updatedAdmission))
-  .catch((error) => res.status(500).json({error: error.message || `error in updating admission document`}))
-}
+    const admissionID = req.params.id
+  
+    try {
+        
+          const { admissionDate, dischargeDate, diagnosis, attendingDoctor } = req.body
+        
+          const updateFields = { admissionDate, dischargeDate, diagnosis, attendingDoctor }
+          
+          const updateAdmission = await Admission.findByIdAndUpdate(admissionID, updateFields, {new: true})
+  
+          if (!updateAdmission) {
+              return res.status(404).json({ error: "Admission not found" });
+          }
+  
+          return res.status(200).json({ message: `Successfully updated admission ${admissionID}`, admission: updateAdmission });
+  
+    } catch(error) {
+          res.status(500).json({ error: error.message || "Internal Server Error in updating admission" });
+  
+    }
+  
+  }
+     
    
-const deleteAdmissison = (req, res) => {
+const deleteAdmission = async (req, res) => {
+    try {
+        const admissionID = req.params.id;
 
-    const admissionId = req.params.id
+        // Find the admission document by ID using the id from the path param
+        const admission = await Admission.findById(admissionID);
 
-    Admission.findByIdAndDelete(admissionId)
-    .then(() => res.status(200).json({message: `succesfully deleted admission ${admissionId}`}))
-    .catch((err) => res.status(500).json({error: err.message || "Interal Server Error in deleting admission"})) 
+        if (!admission) {
+            return res.status(404).json({ error: "Admission not found" });
+        }
 
-}
+        const patientID = admission.patient
 
-module.exports = { admissions, admission, createAdmission, updateAdmission, deleteAdmissison }
+        // Remove the admission from the patient's admissions list
+        await Patient.findByIdAndUpdate(patientID, { $pull: { admissions: admissionID } });
+
+        // Delete the admission document
+        await Admission.findByIdAndDelete(admissionID);
+
+        res.status(200).json({ message: `Successfully deleted admission ${admissionID}` });
+    } catch (error) {
+        res.status(500).json({ error: error.message || "Internal Server Error in deleting admission" });
+    }
+};
+
+module.exports = { admissions, admission, createAdmission, updateAdmission, deleteAdmission }
