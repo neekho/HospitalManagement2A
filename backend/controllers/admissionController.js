@@ -59,7 +59,6 @@ const updateAdmission = async (req, res) => {
       
         const updateFields = { admissionDate, dischargeDate, diagnosis, attendingDoctor }
         
-      
         const updateAdmission = await Admission.findByIdAndUpdate(admissionID, updateFields, {new: true})
 
         if (!updateAdmission) {
