@@ -2,11 +2,19 @@ const Patient = require("../models/patientSchema");
 
 
 module.exports.patients = (req, res) => {
-
   
-  Patient.find({}).populate("admissions").exec()
-    .then((patients) => res.send(patients))
-    .catch((error) => res.send(error));
+  Patient.find({})
+  .populate({
+      path: 'admissions',
+      populate: {
+          path: 'attendingDoctor',
+          model: 'Doctor'
+      }
+  })
+  .exec()
+  .then((patients) => res.send(patients))
+  .catch((error) => res.send(error));
+
 };
 
 module.exports.patient = (req, res) => {
