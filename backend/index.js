@@ -2,12 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const portNumber = 4000;
+const djangoPortNumber = 8000
 
 const mongoose = require("mongoose");
-
+const cors = require('cors')
 // Middleware
 
 app.use(express.json());
+app.use(cors({origin: `http://localhost:${djangoPortNumber}`}))
 
 // DB Connection
 
