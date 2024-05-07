@@ -27,11 +27,28 @@ module.exports.patient = (req, res) => {
 };
 
 module.exports.createPatient = (req, res) => {
-  const { firstName, lastName, age, phoneNumber, confined, allergies, admissions } = req.body;
+  const { firstName, lastName, suffix, age, phoneNumber, confined, allergies, admissions } = req.body;
+
+  const allowedSuffixes = ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"]
+
+  if (!allowedSuffixes.includes(suffix)) {
+    return res.status(400).json({ error: "Invalid suffix provided" })
+  }
+
+
+  if (isNaN(age) || age < 1 || age > 130) {
+    return res.status(400).json({ error: "Age must be a number between 1 and 130." })
+  }
+
+  if (!/^09\d{9}$/.test(phoneNumber)) {
+    return res.status(400).json({ error: "Phone number must be in the format 09xxxxxxxxx." })
+  }
+
 
   const newPatient = new Patient({
     firstName,
     lastName,
+    suffix,
     age,
     phoneNumber,
     confined,
@@ -43,7 +60,7 @@ module.exports.createPatient = (req, res) => {
     const savedPatient = newPatient.save();
     res.status(201).json({ "new patient": newPatient });
   } catch (error) {
-    res.status(500).json({ error: error.message || "Internal Server Error" });
+    res.status(500).json({ error: error.message || "Internal Server Error in creating patient" });
   }
 };
 
@@ -59,14 +76,14 @@ module.exports.deletePatient = (req, res) => {
 };
 
 module.exports.updatePatient = (req, res) => {
-  const { firstName, lastName, age, confined } = req.body;
+  const { firstName, lastName, suffix, age, phoneNumber, confined, allergies } = req.body;
 
   console.log(req.body);
 
   const patientID = req.params.id;
   console.log(patientID);
 
-  const updatedFields = { firstName, lastName, age, confined };
+  const updatedFields = { firstName, lastName, suffix, age, phoneNumber, confined, allergies };
 
   console.log(updatedFields);
 

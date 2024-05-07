@@ -23,6 +23,12 @@ const referencePatient = Schema({
       required: [true, "age is required"],
   },
 
+  suffix: {
+    type: String,
+    enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"] 
+
+  },
+
   phoneNumber: {
       type: String,
       validate: {
