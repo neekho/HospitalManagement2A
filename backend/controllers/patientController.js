@@ -50,7 +50,7 @@ module.exports.deletePatient = (req, res) => {
   const patientID = req.params.patientID;
   console.log(patientID);
 
-  const update = { active: false, confined: false };
+  const update = {confined: false};
 
   Patient.findByIdAndUpdate(patientID, update, { new: true })
     .then((patient) => res.send(patient))
@@ -58,14 +58,14 @@ module.exports.deletePatient = (req, res) => {
 };
 
 module.exports.updatePatient = (req, res) => {
-  const { firstName, lastName, age, active, confined } = req.body;
+  const { firstName, lastName, age, confined } = req.body;
 
   console.log(req.body);
 
   const patientID = req.params.id;
   console.log(patientID);
 
-  const updatedFields = { firstName, lastName, age, active, confined };
+  const updatedFields = { firstName, lastName, age, confined };
 
   console.log(updatedFields);
 
