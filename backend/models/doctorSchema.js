@@ -17,11 +17,6 @@ const doctorDocument = Schema({
         type: String,
         required: [true, "speciality is needed"],
       },
-
-      active: {
-        type: Boolean,
-        default: true
-      }
 })
 
 

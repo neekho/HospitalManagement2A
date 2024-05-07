@@ -20,13 +20,12 @@ module.exports.doctor = (req, res) => {
 
 module.exports.createDoctor = (req, res) => {
 
-    const { firstName, lastName, speciality, active} = req.body
+    const { firstName, lastName, speciality} = req.body
 
     const newDoctor = Doctor({
         firstName,
         lastName,
-        speciality,
-        active
+        speciality
     })
 
     try {

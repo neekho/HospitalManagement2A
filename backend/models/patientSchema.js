@@ -15,6 +15,12 @@ const referencePatient = Schema({
       trim: true,
       required: [true, "last name is needed"],
   },
+
+  suffix: {
+    type: String,
+    enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"] 
+
+},
   
   age: {
       type: Number,

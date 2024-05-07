@@ -1,9 +1,9 @@
 const Admission = require('../models/admissionSchema')
 
-
+const Patient = require('../models/patientSchema')
 
 const admissions = (req, res) => {
- Admission.find({})
+ Admission.find({}).populate("attendingDoctor")
  .then((admissions) => res.status(200).json(admissions))
  .catch((error) => res.status(500).json({error: error.message || "Internal Server Error in getting all admissions"}))
 }
@@ -13,14 +13,14 @@ const admission = (req, res) => {
 
     const admissionId = req.params.id
 
-    Admission.findById(admissionId)
+    Admission.findById(admissionId).populate("attendingDoctor")
     .then((admission) => res.status(200).json(admission))
     .catch((error) => res.status(500).json({error: error.message || `Internal Server Error in getting ${admissionId} admission`}))
    }
    
    
 
-const createAdmission = (req, res) => {
+const createAdmission = async (req, res) => {
     
 
     const { patient, admissionDate, dischargeDate, diagnosis, attendingDoctor} = req.body
@@ -36,7 +36,10 @@ const createAdmission = (req, res) => {
 
     try {
 
-        newAdmission.save()
+        await newAdmission.save()
+
+        // this will insert the admission record to the associate patient within the patient key
+        await Patient.findByIdAndUpdate(patient, { $push: { admissions: newAdmission._id } });
         res.status(201).json({'new admission': newAdmission})
 
     } catch (error) {
