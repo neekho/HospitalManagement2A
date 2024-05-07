@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello, Web</h1>
+    <h2>Number of patient records: {{patient_details|length}}</h2>
+
+    {% for patient in patient_details %}
+        <p>{{patient.lastName}}, {{patient.firstName}} {{patient.suffix}}</p>
+        <p>{{patient.age}}</p>
+
+        {% if patient.admissions %}
+        
+            {% for admission in patient.admissions %}
+                <p>The admission date is: {{admission.admissionDate|date:"D d M Y"}}</p>
+                <!-- <p>The admission date is: {{ admission.admissionDate }}</p> -->
+                <p>{{admission.diagnosis}}</p>
+
+                <p>attended by: {{admission.attendingDoctor}}</p>
+            {% endfor %}
+
+        {% else %}
+            <p>This patient has no records of admissions</p>
+
+        {% endif %}
+
+
+    {% endfor %}
+
+</body>
+</html>

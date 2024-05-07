@@ -10,7 +10,7 @@ def all(request):
 
 
     context = {
-        'patient_detail': all_patient_response
+        'patient_details': all_patient_response
     }
 
-    return HttpResponse(context['patient_detail'])
+    return render(request, 'HospitalManagement/index.html', context=context)
