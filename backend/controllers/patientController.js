@@ -1,3 +1,4 @@
+const { model } = require("mongoose");
 const Patient = require("../models/patientSchema");
 
 
@@ -20,7 +21,7 @@ module.exports.patients = (req, res) => {
 module.exports.patient = (req, res) => {
   const patientID = req.params.id;
 
-  Patient.findById(patientID)
+  Patient.findById(patientID).populate({path: 'admissions', populate: {path: 'attendingDoctor', model: 'Doctor'}})
     .then((patients) => res.send(patients))
     .catch((error) => res.send(error));
 };
