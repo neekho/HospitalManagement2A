@@ -1,9 +1,15 @@
+{% load static %}
+{% load tz %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'HospitalManagement/style.css'%}">
+
+    <title>Patients</title>
 </head>
 <body>
     <h1>Hello, Web</h1>
@@ -11,13 +17,23 @@
 
     {% for patient in patient_details %}
         <p>{{patient.lastName}}, {{patient.firstName}} {{patient.suffix}}</p>
-        <p>{{patient.age}}</p>
+        <p><b>Age:</b> {{patient.age}}</p>
+
+        {% if patient.allergies %}
+            <p>this patient has allergie to:</p>
+            {% for allergy in patient.allergies %}
+                <p>{{ allergy }}</p>
+            {% endfor %}
+
+        {% endif %}
+        
+
 
         {% if patient.admissions %}
+            <p>this patient has {{ patient.admissions|length}} admissions</p>
         
             {% for admission in patient.admissions %}
-                <p>The admission date is: {{admission.admissionDate|date:"D d M Y"}}</p>
-                <!-- <p>The admission date is: {{ admission.admissionDate }}</p> -->
+                <p>The admission date is: {{ admission.admissionDate|date:"Y-m-d H:i:s" }}</p>
                 <p>{{admission.diagnosis}}</p>
 
                 <p>attended by: {{admission.attendingDoctor}}</p>
@@ -30,6 +46,8 @@
 
 
     {% endfor %}
+
+    <p>{{patient_details.0.admissions.0.admissionDate|date:"D d M Y"}}</p>
 
 </body>
 </html>
