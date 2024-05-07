@@ -12,7 +12,7 @@ router.post("/create", admissionController.createAdmission)
 
 router.put("/update/:id", admissionController.updateAdmission)
 
-router.delete("/delete/:id", admissionController.deleteAdmissison)
+router.delete("/delete/:id", admissionController.deleteAdmission)
 
 
-module.exports = router
+module.exports = router    

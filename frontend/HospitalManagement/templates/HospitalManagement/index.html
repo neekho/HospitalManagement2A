@@ -36,7 +36,7 @@
                 <p>The admission date is: {{ admission.admissionDate|date:"Y-m-d H:i:s" }}</p>
                 <p>{{admission.diagnosis}}</p>
 
-                <p>attended by: {{admission.attendingDoctor}}</p>
+                <p>attended by: Dr. {{admission.attendingDoctor.lastName}}, {{admission.attendingDoctor.firstName}}</p>
             {% endfor %}
 
         {% else %}

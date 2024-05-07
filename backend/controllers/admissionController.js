@@ -1,9 +1,9 @@
 const Admission = require('../models/admissionSchema')
-
+const Patient = require('../models/patientSchema')
 
 
 const admissions = (req, res) => {
- Admission.find({})
+ Admission.find({}).populate("attendingDoctor")
  .then((admissions) => res.status(200).json(admissions))
  .catch((error) => res.status(500).json({error: error.message || "Internal Server Error in getting all admissions"}))
 }
@@ -13,16 +13,15 @@ const admission = (req, res) => {
 
     const admissionId = req.params.id
 
-    Admission.findById(admissionId)
+    Admission.findById(admissionId).populate("attendingDoctor")
     .then((admission) => res.status(200).json(admission))
     .catch((error) => res.status(500).json({error: error.message || `Internal Server Error in getting ${admissionId} admission`}))
    }
    
    
 
-const createAdmission = (req, res) => {
+const createAdmission = async (req, res) => {
     
-
     const { patient, admissionDate, dischargeDate, diagnosis, attendingDoctor} = req.body
 
     const newAdmission = Admission({
@@ -37,6 +36,9 @@ const createAdmission = (req, res) => {
     try {
 
         newAdmission.save()
+
+        // this will insert the admission record/object to the associated patient's admission list.
+        await Patient.findByIdAndUpdate(patient, { $push: { admissions: newAdmission._id } });
         res.status(201).json({'new admission': newAdmission})
 
     } catch (error) {
@@ -47,26 +49,58 @@ const createAdmission = (req, res) => {
 };
 
 
-const updateAdmission = (req, res) => {
-  const { admissionDate, dischargeDate, diagnosis } = req.body
+const updateAdmission = async (req, res) => {
 
-  const updateAdmissions = { admissionDate, dischargeDate, diagnosis}
+  const admissionID = req.params.id
 
-  const admissionId = req.params.id
+  try {
+      
+        const { admissionDate, dischargeDate, diagnosis, attendingDoctor } = req.body
+      
+        const updateFields = { admissionDate, dischargeDate, diagnosis, attendingDoctor }
+        
+      
+        const updateAdmission = await Admission.findByIdAndUpdate(admissionID, updateFields, {new: true})
 
-  Admission.findByIdAndUpdate(admissionId, updateAdmissions, {new: true})
-  .then((updatedAdmission) => res.status(200).json(updatedAdmission))
-  .catch((error) => res.status(500).json({error: error.message || `error in updating admission document`}))
+        if (!updateAdmission) {
+            return res.status(404).json({ error: "Admission not found" });
+        }
+
+        return res.status(200).json({ message: `Successfully updated admission ${admissionID}`, admission: updateAdmission });
+
+  } catch(error) {
+        res.status(500).json({ error: error.message || "Internal Server Error in updating admission" });
+
+  }
+
 }
    
-const deleteAdmissison = (req, res) => {
 
-    const admissionId = req.params.id
 
-    Admission.findByIdAndDelete(admissionId)
-    .then(() => res.status(200).json({message: `succesfully deleted admission ${admissionId}`}))
-    .catch((err) => res.status(500).json({error: err.message || "Interal Server Error in deleting admission"})) 
+const deleteAdmission = async (req, res) => {
+    try {
+        const admissionID = req.params.id;
 
-}
+        // Find the admission document by ID using the id from the path param
+        const admission = await Admission.findById(admissionID);
 
-module.exports = { admissions, admission, createAdmission, updateAdmission, deleteAdmissison }
+        if (!admission) {
+            return res.status(404).json({ error: "Admission not found" });
+        }
+
+        const patientID = admission.patient
+
+        // Remove the admission from the patient's admissions list
+        await Patient.findByIdAndUpdate(patientID, { $pull: { admissions: admissionID } });
+
+        // Delete the admission document
+        await Admission.findByIdAndDelete(admissionID);
+
+        res.status(200).json({ message: `Successfully deleted admission ${admissionID}` });
+    } catch (error) {
+        res.status(500).json({ error: error.message || "Internal Server Error in deleting admission" });
+    }
+};
+
+
+module.exports = { admissions, admission, createAdmission, updateAdmission, deleteAdmission }
