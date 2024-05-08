@@ -5,6 +5,7 @@ module.exports.searchPatient = (req, res) => {
   const patientName = req.query.firstName
   const patientSurname = req.query.lastName
 
+
   Patient.find({firstName: patientName, lastName: patientSurname})
   .then((p) => res.status(200).json(p))
   .catch((error) => res.status(500).json({error : error.error || "Internal server on finding patient"}))
@@ -29,7 +30,13 @@ module.exports.patients = (req, res) => {
 module.exports.patient = (req, res) => {
   const patientID = req.params.id;
 
-  Patient.findById(patientID).populate("admissions").exec()
+  Patient.findById(patientID).populate({
+    path: 'admissions',
+    populate: {
+        path: 'attendingDoctor',
+        model: 'Doctor' // Assuming your Doctor model is named 'Doctor'
+    }
+}).exec()
     .then((patients) => res.send(patients))
     .catch((error) => res.send(error));
 };

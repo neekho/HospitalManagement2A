@@ -18,9 +18,9 @@ const referencePatient = Schema({
 
   suffix: {
     type: String,
-    enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"] 
+    enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD"] 
 
-},
+  },
   
   age: {
       type: Number,
@@ -49,7 +49,7 @@ const referencePatient = Schema({
       type: [String]
   },
 
-  admissions: [{type: mongoose.Types.ObjectId, ref: "Admission"}]
+  admissions: [{type: mongoose.Types.ObjectId, ref: "Admission"}] 
   
 
     
