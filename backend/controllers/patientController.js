@@ -30,14 +30,6 @@ module.exports.queryPatientName = (req, res) => {
 module.exports.patients = (req, res) => {
   
   Patient.find({})
-  .populate({
-      path: 'admissions',
-      populate: {
-          path: 'attendingDoctor',
-          model: 'Doctor'
-      }
-  })
-  .exec()
   .then((patients) => res.send(patients))
   .catch((error) => res.send(error));
 
@@ -46,7 +38,7 @@ module.exports.patients = (req, res) => {
 module.exports.patient = (req, res) => {
   const patientID = req.params.id;
 
-  Patient.findById(patientID).populate({path: 'admissions', populate: {path: 'attendingDoctor', model: 'Doctor'}})
+  Patient.findById(patientID)
     .then((patients) => res.send(patients))
     .catch((error) => res.send(error));
 };
