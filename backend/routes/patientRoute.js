@@ -9,6 +9,7 @@ const admissionController = require('../controllers/admissionController')
 // api/v1/patients/query?firstName=Value&lastName=Surname
 router.get("/query", patientController.queryPatientName);
 
+router.get("/:id", patientController.patient);
 
 // shows all patients
 router.get("/", patientController.patients);
@@ -18,7 +19,7 @@ router.get("/", patientController.patients);
 router.post("/create", patientController.createPatient);
 
 // delete entire patient record
-router.delete("/delete/:/id", patientController.deletePatient)
+router.delete("/delete/:id", patientController.deletePatient)
 
 
 

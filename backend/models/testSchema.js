@@ -61,7 +61,7 @@ const nestedPatientSchema = Schema({
 
     suffix: {
         type: String,
-        enum: ["Sr.", "Jr.", "II", "III", "IV", "PhD", "MD", "Prof"] 
+        enum: ["Sr.", "Jr.", "II", "III", "IV"] 
     
     },
 
